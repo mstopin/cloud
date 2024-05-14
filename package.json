@@ -1,0 +1,10 @@
+{
+  "name": "cloud",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/mstopin/cloud.git",
+  "author": "Mateusz Stopiński <46541569+mstopin@users.noreply.github.com>",
+  "license": "MIT",
+  "private": true,
+  "workspaces": ["./services"]
+}
