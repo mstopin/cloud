@@ -1,0 +1,5 @@
+resource "aws_ecr_repository" "this" {
+  name = var.name_prefix
+
+  image_tag_mutability = "IMMUTABLE" 
+}
