@@ -1,6 +1,7 @@
 import 'dotenv/config'
 
 import express from "express";
+import os from 'node:os'
 
 (async function main() {
   const app = express();
@@ -17,6 +18,8 @@ import express from "express";
   app.get("/", (_, res) => {
     res.json({
       hello: "world",
+      hostname: os.hostname(),
+      uptime: os.uptime()
     });
   });
 

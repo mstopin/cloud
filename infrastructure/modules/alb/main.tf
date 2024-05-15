@@ -5,8 +5,6 @@ resource "aws_lb" "this" {
   load_balancer_type = "application"
   subnets = var.subnets_ids
   security_groups = var.security_groups_ids
-
-  enable_deletion_protection = true
 }
 
 resource "aws_lb_listener" "main" {
@@ -24,9 +22,14 @@ resource "aws_lb_listener" "main" {
 resource "aws_lb_target_group" "main" {
   name = "${var.name_prefix}-alb-tg"
 
-  target_type = "ip"
+  target_type = "instance"
   protocol = "HTTP"
   port = 80
   
   vpc_id = var.vpc_id
+
+  health_check {
+    path = "/health"
+    matcher = "200"
+  }
 }

@@ -60,7 +60,7 @@ module "asg" {
 
   vpc_id = module.vpc.id
   subnets_ids = module.vpc.public_subnets_ids
-  security_groups_ids = [module.vpc.allow_all_egress_sg_id]
+  security_groups_ids = [module.vpc.allow_all_egress_sg_id, module.vpc.allow_all_internal_sg_id]
 
   iam_instance_profiles_names = [module.ecs.node_instance_profile_name]
 
@@ -76,5 +76,30 @@ module "alb" {
 
   vpc_id = module.vpc.id
   subnets_ids = module.vpc.public_subnets_ids
-  security_groups_ids = [module.vpc.allow_http_https_ingress_sg_id]
+  security_groups_ids = [module.vpc.allow_http_https_ingress_sg_id, module.vpc.allow_all_internal_sg_id]
+}
+
+module "ecs-service" {
+  source = "./modules/ecs-service"
+
+  for_each = var.ecs_services
+
+  region = var.region
+  name_prefix = local.name_prefix
+  name = each.key
+  
+  cluster_id = module.ecs.cluster_id
+  capacity_provider_name = module.ecs.capacity_provider_name
+  alb_target_group_arn = module.alb.target_group_id
+  desired_count = each.value.desired_count
+
+  container_definitions = [
+    for container_definition in each.value.container_definitions: {
+      name = container_definition.name
+      image = module.ecr[container_definition.ecr_key].url
+      essential = container_definition.essential
+      published_ports = container_definition.published_ports
+      environment = container_definition.environment
+    }
+  ]
 }

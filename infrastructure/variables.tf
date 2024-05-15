@@ -37,3 +37,20 @@ variable "ecs" {
     desired_cluster_size = number 
   })
 }
+
+variable "ecs_services" {
+  type = map(object({
+    desired_count = number
+
+    container_definitions = list(object({
+      name = string
+      ecr_key = string
+      essential = bool
+      published_ports = list(number)
+      environment = list(object({
+        name = string
+        value = string
+      }))
+    }))
+  }))
+}

@@ -9,3 +9,8 @@ output "cluster_id" {
 output "node_instance_profile_name" {
   value = aws_iam_instance_profile.node.name
 }
+
+output "capacity_provider_name" {
+  value = aws_ecs_capacity_provider.main.name
+}
+

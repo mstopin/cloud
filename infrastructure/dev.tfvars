@@ -14,7 +14,25 @@ ecr = {
 }
 
 ecs = {
-  min_cluster_size = 0
-  desired_cluster_size = 0
-  max_cluster_size = 3
+  min_cluster_size = 2
+  desired_cluster_size = 2
+  max_cluster_size = 2
+}
+
+ecs_services = {
+  "hello-world" = {
+    desired_count = 3
+
+    container_definitions = [{
+      name = "app"
+      ecr_key = "hello-world"
+      essential = true
+      published_ports = [8080]
+      environment = [{
+        name = "APP_PORT"
+        value = "8080"
+      }]
+    }]
+    
+  }
 }

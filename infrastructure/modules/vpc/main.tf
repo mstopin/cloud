@@ -60,14 +60,14 @@ resource "aws_route_table_association" "public" {
   subnet_id = aws_subnet.public[count.index].id
 }
 
-resource "aws_security_group" "allow_all" {
+resource "aws_security_group" "allow_all_egress" {
   name = "${var.name_prefix}-allow-all-egress-sg"
   
   vpc_id = aws_vpc.this.id
 }
 
 resource "aws_vpc_security_group_egress_rule" "allow_all" {
-  security_group_id = aws_security_group.allow_all.id
+  security_group_id = aws_security_group.allow_all_egress.id
 
   cidr_ipv4 = "0.0.0.0/0"
   ip_protocol = "-1"
@@ -95,4 +95,24 @@ resource "aws_vpc_security_group_ingress_rule" "allow_https" {
   ip_protocol = "tcp"
   from_port = 443
   to_port = 443
+}
+
+resource "aws_security_group" "allow_all_internal" {
+  name = "${var.name_prefix}-allow-all-internal-ingress"
+
+  vpc_id = aws_vpc.this.id
+}
+
+resource "aws_vpc_security_group_ingress_rule" "allow_all_internal_ingress" {
+  security_group_id = aws_security_group.allow_all_internal.id
+
+  cidr_ipv4 = aws_vpc.this.cidr_block
+  ip_protocol = "-1"
+}
+
+resource "aws_vpc_security_group_egress_rule" "allow_all_internal_egress" {
+  security_group_id = aws_security_group.allow_all_internal.id
+
+  cidr_ipv4 = aws_vpc.this.cidr_block
+  ip_protocol = "-1"
 }
