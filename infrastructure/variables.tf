@@ -23,3 +23,17 @@ variable "vpc" {
     private_subnets_cidr_blocks = list(string)
   })
 }
+
+variable "ecr" {
+  type = map(object({
+    name_prefix = string
+  }))
+}
+
+variable "ecs" {
+  type = object({
+    min_cluster_size = number
+    max_cluster_size = number
+    desired_cluster_size = number 
+  })
+}

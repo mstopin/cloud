@@ -30,6 +30,17 @@ variable "ami" {
   type = string
 }
 
-variable "tags" {
+variable "user_data" {
+  type = string
+  default = ""
+}
+
+variable "asg_tags" {
   type = map(string)
+  default = {}
+}
+
+variable "iam_instance_profiles_names" {
+  type = list(string)
+  default = []
 }
